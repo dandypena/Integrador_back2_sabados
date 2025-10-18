@@ -32,13 +32,19 @@ public class Estudiante {
     @JsonManagedReference(value="relacionestudiantenota")
     private ArrayList<Nota> notas;
 
+    @ManyToOne
+    @JoinColumn(name = "fk_grupo", referencedColumnName = "id")
+    private Grupo grupo;
+
+
     public Estudiante() {
     }
 
-    public Estudiante(Integer id, Double promedio, LocalDate fechaNacimiento) {
+    public Estudiante(Integer id, Double promedio, LocalDate fechaNacimiento, Grupo grupo) {
         this.id = id;
         this.promedio = promedio;
         this.fechaNacimiento = fechaNacimiento;
+        this.grupo = grupo;
     }
 
     public Integer getId() {
@@ -61,7 +67,18 @@ public class Estudiante {
         return fechaNacimiento;
     }
 
+    public Grupo getGrupo() {return grupo;}
+
+    public void setGrupo(Grupo grupo) {this.grupo = grupo;}
+
     public void setFechaNacimiento(LocalDate fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
+
+    public Usuario getUsuario() {return usuario;}
+
+    public void setUsuario(Usuario usuario) {this.usuario = usuario;}
+
+
+
 }
