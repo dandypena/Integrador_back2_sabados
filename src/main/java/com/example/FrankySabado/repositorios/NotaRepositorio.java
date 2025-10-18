@@ -11,7 +11,8 @@ import java.util.List;
 @Repository
 public interface NotaRepositorio extends JpaRepository<Nota, Integer> {
 
-
+    // 🔹 HU08 - Listar notas por estudiante
+    List<Nota> findByEstudianteId(Integer estudianteId);
 
     // 🔹 Para HU11 – Notas de bajo rendimiento
     @Query("""
@@ -31,6 +32,25 @@ public interface NotaRepositorio extends JpaRepository<Nota, Integer> {
     """)
     List<Object[]> obtenerConsolidadoPorTipo(Integer idEstudiante);
     long countByEstudianteIdAndTipo(Integer idEstudiante, TipoEvaluacion tipo);
+
+    // 🔹 HU10 - Obtener notas por materia y grupo
+    @Query("""
+        SELECT n
+        FROM Nota n
+        JOIN n.estudiante e
+        JOIN e.grupo g
+        WHERE g.materiaId = :materiaId
+        AND g.id = :grupoId
+        ORDER BY e.usuario.nombre ASC
+    """)
+    List<Nota> findByMateriaIdAndGrupoId(Long materiaId, Long grupoId);
+
+    // 🔹 HU18 - Obtener notas ordenadas por fecha para análisis de evolución
+    @Query("""
+        SELECT n
+        FROM Nota n
+        WHERE n.estudiante.id = :estudianteId
+        ORDER BY n.fecha ASC
+    """)
+    List<Nota> findByEstudianteIdOrderByFechaAsc(Integer estudianteId);
 }
-
-
