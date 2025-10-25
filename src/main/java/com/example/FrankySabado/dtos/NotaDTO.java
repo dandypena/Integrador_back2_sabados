@@ -7,22 +7,12 @@ public class NotaDTO {
     private Integer id;
     private Double valor;
     private TipoEvaluacion tipo;
-    private LocalDate fecha;
+    private String comentario;
     private Integer estudianteId;
-    private Long materiaId; // <-- agregado para validar materia en HU07
-    private String comentario; // <-- agregado para HU13
-    private String estudianteNombre; // <-- agregado para HU20
+    private LocalDate fecha;
 
-    // Constructores
+    // Constructor por defecto
     public NotaDTO() {}
-
-    public NotaDTO(Integer id, Double valor, TipoEvaluacion tipo, LocalDate fecha, Integer estudianteId) {
-        this.id = id;
-        this.valor = valor;
-        this.tipo = tipo;
-        this.fecha = fecha;
-        this.estudianteId = estudianteId;
-    }
 
     // Getters y Setters
     public Integer getId() {
@@ -49,12 +39,12 @@ public class NotaDTO {
         this.tipo = tipo;
     }
 
-    public LocalDate getFecha() {
-        return fecha;
+    public String getComentario() {
+        return comentario;
     }
 
-    public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
     }
 
     public Integer getEstudianteId() {
@@ -65,27 +55,11 @@ public class NotaDTO {
         this.estudianteId = estudianteId;
     }
 
-    public Long getMateriaId() {
-        return materiaId;
+    public LocalDate getFecha() {
+        return fecha;
     }
 
-    public void setMateriaId(Long materiaId) {
-        this.materiaId = materiaId;
-    }
-
-    public String getComentario() {
-        return comentario;
-    }
-
-    public void setComentario(String comentario) {
-        this.comentario = comentario;
-    }
-
-    public String getEstudianteNombre() {
-        return estudianteNombre;
-    }
-
-    public void setEstudianteNombre(String estudianteNombre) {
-        this.estudianteNombre = estudianteNombre;
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
     }
 }

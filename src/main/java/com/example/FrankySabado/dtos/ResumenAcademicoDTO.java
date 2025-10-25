@@ -5,18 +5,17 @@ import java.util.List;
 public class ResumenAcademicoDTO {
     private Integer estudianteId;
     private String nombreEstudiante;
-    private Double promedioGeneral;
+    private double promedioGeneral;
     private List<MateriaResumenDTO> materias;
 
-    public ResumenAcademicoDTO() {}
-
-    public ResumenAcademicoDTO(Integer estudianteId, String nombreEstudiante, Double promedioGeneral, List<MateriaResumenDTO> materias) {
+    public ResumenAcademicoDTO(Integer estudianteId, String nombreEstudiante, double promedioGeneral, List<MateriaResumenDTO> materias) {
         this.estudianteId = estudianteId;
         this.nombreEstudiante = nombreEstudiante;
         this.promedioGeneral = promedioGeneral;
         this.materias = materias;
     }
 
+    // Getters y Setters
     public Integer getEstudianteId() {
         return estudianteId;
     }
@@ -33,11 +32,11 @@ public class ResumenAcademicoDTO {
         this.nombreEstudiante = nombreEstudiante;
     }
 
-    public Double getPromedioGeneral() {
+    public double getPromedioGeneral() {
         return promedioGeneral;
     }
 
-    public void setPromedioGeneral(Double promedioGeneral) {
+    public void setPromedioGeneral(double promedioGeneral) {
         this.promedioGeneral = promedioGeneral;
     }
 

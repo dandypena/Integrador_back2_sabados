@@ -1,28 +1,30 @@
 package com.example.FrankySabado.mapper;
 
-import com.example.FrankySabado.dtos.RendimientoBajoDTO;
+import com.example.FrankySabado.dtos.NotaDTO;
+import com.example.FrankySabado.modelos.Nota;
 import org.springframework.stereotype.Component;
 
 @Component
 public class NotaMapper {
 
-    public RendimientoBajoDTO toRendimientoBajoDTO(Object[] data) {
-        String nombreEstudiante = (String) data[0];
-        String nombreMateria = String.valueOf(data[1]);
-        Double promedio = (Double) data[2];
-
-        String recomendacion = generarRecomendacion(nombreMateria, promedio);
-
-        return new RendimientoBajoDTO(nombreEstudiante, nombreMateria, promedio, recomendacion);
+    public NotaDTO entityToDto(Nota nota) {
+        NotaDTO dto = new NotaDTO();
+        dto.setId(nota.getId());
+        dto.setValor(nota.getValor());
+        dto.setComentario(nota.getComentario());
+        dto.setEstudianteId(nota.getEstudiante().getId());
+        dto.setTipo(nota.getTipo());
+        dto.setFecha(nota.getFecha());
+        return dto;
     }
 
-    private String generarRecomendacion(String materia, Double promedio) {
-        if (promedio < 2.0) {
-            return "Debe asistir a tutorías urgentes y revisar materiales de " + materia + ".";
-        } else if (promedio < 2.5) {
-            return "Se recomienda reforzar conocimientos en " + materia + " con ejercicios adicionales.";
-        } else {
-            return "Revisar apuntes y pedir asesoría en " + materia + " para mejorar el desempeño.";
-        }
+    public Nota dtoToEntity(NotaDTO dto) {
+        Nota nota = new Nota();
+        nota.setId(dto.getId());
+        nota.setValor(dto.getValor());
+        nota.setComentario(dto.getComentario());
+        nota.setTipo(dto.getTipo());
+        nota.setFecha(dto.getFecha());
+        return nota;
     }
 }

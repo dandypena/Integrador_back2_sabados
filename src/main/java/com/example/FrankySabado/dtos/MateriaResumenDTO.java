@@ -3,40 +3,48 @@ package com.example.FrankySabado.dtos;
 import java.util.List;
 
 public class MateriaResumenDTO {
-    private Long materiaId;
-    private String nombreMateria;
-    private List<NotaDTO> ultimasNotas;
+    private Long id;
+    private String nombre;
+    private double promedio;
+    private List<NotaDTO> notas;
 
-    public MateriaResumenDTO() {}
-
-    public MateriaResumenDTO(Long materiaId, String nombreMateria, List<NotaDTO> ultimasNotas) {
-        this.materiaId = materiaId;
-        this.nombreMateria = nombreMateria;
-        this.ultimasNotas = ultimasNotas;
+    public MateriaResumenDTO(Long id, String nombre, double promedio, List<NotaDTO> notas) {
+        this.id = id;
+        this.nombre = nombre;
+        this.promedio = promedio;
+        this.notas = notas;
     }
 
-    public Long getMateriaId() {
-        return materiaId;
+    // Getters y Setters
+    public Long getId() {
+        return id;
     }
 
-    public void setMateriaId(Long materiaId) {
-        this.materiaId = materiaId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getNombreMateria() {
-        return nombreMateria;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setNombreMateria(String nombreMateria) {
-        this.nombreMateria = nombreMateria;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
-    public List<NotaDTO> getUltimasNotas() {
-        return ultimasNotas;
+    public double getPromedio() {
+        return promedio;
     }
 
-    public void setUltimasNotas(List<NotaDTO> ultimasNotas) {
-        this.ultimasNotas = ultimasNotas;
+    public void setPromedio(double promedio) {
+        this.promedio = promedio;
+    }
+
+    public List<NotaDTO> getNotas() {
+        return notas;
+    }
+
+    public void setNotas(List<NotaDTO> notas) {
+        this.notas = notas;
     }
 }
-

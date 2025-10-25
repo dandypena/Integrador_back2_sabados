@@ -2,8 +2,6 @@ package com.example.FrankySabado.controlador;
 
 import com.example.FrankySabado.ayudas.Roles;
 import com.example.FrankySabado.dtos.*;
-import com.example.FrankySabado.modelos.Nota;
-import com.example.FrankySabado.repositorios.NotaRepositorio;
 import com.example.FrankySabado.servicios.NotaServicio;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +16,12 @@ import java.util.Set;
 public class NotaControlador {
 
     private final NotaServicio notaServicio;
+    private static final Set<Roles> VIEW_COMMENT_ROLES = Set.of(Roles.Docente, Roles.Administrador, Roles.Familiar);
+    private static final Set<Roles> WRITE_COMMENT_ROLES = Set.of(Roles.Docente);
 
     public NotaControlador(NotaServicio notaServicio) {
         this.notaServicio = notaServicio;
     }
-
-    private static final Set<Roles> VIEW_COMMENT_ROLES = Set.of(Roles.Docente, Roles.Administrador, Roles.Familiar);
-    private static final Set<Roles> WRITE_COMMENT_ROLES = Set.of(Roles.Docente);
 
     // 🟢 HU08 - POST /notas - Registrar una nota individual
     @PostMapping
@@ -33,13 +30,11 @@ public class NotaControlador {
             @RequestBody NotaDTO notaDTO) {
         try {
             Roles rol = Roles.valueOf(rolHeader);
-            // Si viene comentario, solo Docente puede añadirlo
             if (notaDTO.getComentario() != null && !WRITE_COMMENT_ROLES.contains(rol)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
             }
 
             NotaDTO notaCreada = notaServicio.registrarNota(notaDTO);
-            // Si el rol no puede ver comentarios, limpiar antes de responder
             if (!VIEW_COMMENT_ROLES.contains(rol)) {
                 notaCreada.setComentario(null);
             }
@@ -59,10 +54,9 @@ public class NotaControlador {
         try {
             Roles rol = null;
             if (rolHeader != null) rol = Roles.valueOf(rolHeader);
-
+//// ACA ESTA EL PROBLEMA
             List<NotaDTO> notas = notaServicio.obtenerNotasPorEstudiante(id);
 
-            // Si el rol no puede ver comentarios, limpiar campo comentario
             if (rol == null || !VIEW_COMMENT_ROLES.contains(rol)) {
                 notas.forEach(n -> n.setComentario(null));
             }
@@ -83,13 +77,11 @@ public class NotaControlador {
             @RequestBody NotaDTO notaDTO) {
         try {
             Roles rol = Roles.valueOf(rolHeader);
-            // Si intenta escribir comentario, validar permisos
             if (notaDTO.getComentario() != null && !WRITE_COMMENT_ROLES.contains(rol)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
             }
 
             NotaDTO notaActualizada = notaServicio.actualizarNota(id, notaDTO);
-            // Limpiar comentario si rol no tiene permiso de visualización
             if (!VIEW_COMMENT_ROLES.contains(rol)) {
                 notaActualizada.setComentario(null);
             }
@@ -108,105 +100,20 @@ public class NotaControlador {
             notaServicio.eliminarNota(id);
             return ResponseEntity.ok("Nota eliminada correctamente");
         } catch (RuntimeException e) {
-			return ResponseEntity.noContent().build();
+            return ResponseEntity.noContent().build();
         }
     }
 
-    @GetMapping("/bajo-rendimiento")
-    public List<RendimientoBajoDTO> getNotasBajoRendimiento() {
-        return notaServicio.obtenerRendimientoBajo();
-    }
-
-    @PostMapping("/registrar-multiples")
-    public String registrarMultiplesNotas(@RequestBody RegistrarNotasDTO dto) {
-        notaServicio.registrarMultiplesNotas(dto);
-        return "Notas registradas correctamente.";
-    }
-
-    @GetMapping("/consolidado/{idEstudiante}")
-    public List<String> obtenerConsolidado(@PathVariable Integer idEstudiante) {
-        return notaServicio.consolidarNotasPorTipo(idEstudiante);
-    }
-
-    // 🟢 HU10 - GET /notas/materia/{materiaId}/grupo/{grupoId} - Obtener notas por materia y grupo
-    @GetMapping("/materia/{materiaId}/grupo/{grupoId}")
-    public ResponseEntity<?> obtenerNotasPorMateriaYGrupo(
-            @PathVariable Long materiaId,
-            @PathVariable Long grupoId,
-            @RequestHeader(value = "X-User-Role", required = true) String rolHeader) {
-        try {
-            // Convertir el rol del header a enum
-            Roles rol = Roles.valueOf(rolHeader);
-
-            List<EstudianteNotasDTO> resultado = notaServicio.obtenerNotasPorMateriaYGrupo(materiaId, grupoId, rol);
-            return ResponseEntity.ok(resultado);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Rol inválido proporcionado");
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(e.getMessage());
-        }
-    }
-
-    // 🟢 HU15 - GET /notas/familiar/estudiante/{estudianteId} - Visualizar notas desde módulo familiar
-    @GetMapping("/familiar/estudiante/{estudianteId}")
-    public ResponseEntity<?> obtenerNotasParaFamiliar(
-            @PathVariable Integer estudianteId,
-            @RequestHeader(value = "X-User-Id", required = true) Integer familiarUsuarioId,
-            @RequestHeader(value = "X-User-Role", required = true) String rolHeader) {
-        try {
-            // Convertir el rol del header a enum
-            Roles rol = Roles.valueOf(rolHeader);
-
-            List<NotaDTO> notas = notaServicio.obtenerNotasParaFamiliar(estudianteId, familiarUsuarioId, rol);
-            // Familiar está en la lista de VIEW_COMMENT_ROLES, así que puede ver comentario
-            return ResponseEntity.ok(notas);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Rol inválido proporcionado");
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(e.getMessage());
-        }
-    }
-
-    // 🟢 HU18 - GET /notas/evolucion/estudiante/{id} - Consultar evolución académica por periodos
-    @GetMapping("/evolucion/estudiante/{id}")
-    public ResponseEntity<List<EvolucionAcademicaDTO>> obtenerEvolucionAcademica(
-            @PathVariable Integer id,
-            @RequestHeader(value = "X-User-Role", required = false) String rolHeader) {
-        try {
-            Roles rol = null;
-            if (rolHeader != null) rol = Roles.valueOf(rolHeader);
-
-            List<EvolucionAcademicaDTO> evolucion = notaServicio.obtenerEvolucionAcademica(id);
-
-            // Si rol no puede ver comentarios, limpiar comentarios dentro de cada nota
-            if (rol == null || !VIEW_COMMENT_ROLES.contains(rol)) {
-                evolucion.forEach(e -> {
-                    if (e.getNotas() != null) {
-                        e.getNotas().forEach(n -> n.setComentario(null));
-                    }
-                });
-            }
-
-            return ResponseEntity.ok(evolucion);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-    }
-
-    // Nuevo: GET /notas/{id} - Obtener nota por ID con control de visibilidad
+    // GET /notas/{id} - Obtener nota por ID con control de visibilidad
     @GetMapping("/{id}")
     public ResponseEntity<NotaDTO> obtenerNotaPorId(
             @PathVariable Integer id,
             @RequestHeader(value = "X-User-Role", required = false) String rolHeader) {
         try {
             Roles rol = null;
-            if (rolHeader != null) rol = Roles.valueOf(rolHeader);
+            if (rolHeader != null) {
+                rol = Roles.valueOf(rolHeader);
+            }
 
             NotaDTO nota = notaServicio.buscarNotaPorId(id);
             if (rol == null || !VIEW_COMMENT_ROLES.contains(rol)) {
@@ -220,7 +127,7 @@ public class NotaControlador {
         }
     }
 
-    // HU20 - GET /notas/docente/{id}
+    // HU20 - GET /notas/docente/{id} - Consultar notas por docente
     @GetMapping("/docente/{id}")
     public ResponseEntity<?> obtenerNotasPorDocente(
             @PathVariable Integer id,
@@ -229,14 +136,11 @@ public class NotaControlador {
             @RequestHeader(value = "X-User-Role", required = true) String rolHeader) {
         try {
             Roles rol = Roles.valueOf(rolHeader);
-            // Solo Docente y Administrador pueden acceder
             if (rol != Roles.Docente && rol != Roles.Administrador) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Acceso denegado");
             }
 
             List<NotaDTO> notas = notaServicio.obtenerNotasPorDocente(id, materiaId, grupoId);
-
-            // Si el rol no puede ver comentarios, limpiarlos (aunque Docente/Admin sí pueden)
             if (!VIEW_COMMENT_ROLES.contains(rol)) {
                 notas.forEach(n -> n.setComentario(null));
             }
@@ -246,6 +150,35 @@ public class NotaControlador {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Rol inválido");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    // Endpoints auxiliares
+    @GetMapping("/bajo-rendimiento")
+    public ResponseEntity<List<RendimientoBajoDTO>> getNotasBajoRendimiento() {
+        try {
+            return ResponseEntity.ok(notaServicio.obtenerRendimientoBajo());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @PostMapping("/registrar-multiples")
+    public ResponseEntity<String> registrarMultiplesNotas(@RequestBody RegistrarNotasDTO dto) {
+        try {
+            notaServicio.registrarMultiplesNotas(dto);
+            return ResponseEntity.ok("Notas registradas correctamente");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/consolidado/{idEstudiante}")
+    public ResponseEntity<List<String>> obtenerConsolidado(@PathVariable Integer idEstudiante) {
+        try {
+            return ResponseEntity.ok(notaServicio.consolidarNotasPorTipo(idEstudiante));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 }
