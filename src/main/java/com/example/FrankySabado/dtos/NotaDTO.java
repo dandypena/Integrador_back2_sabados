@@ -9,6 +9,7 @@ public class NotaDTO {
     private TipoEvaluacion tipo;
     private String comentario;
     private Integer estudianteId;
+    private Integer materiaId;
     private LocalDate fecha;
 
     // Constructor por defecto
@@ -53,6 +54,14 @@ public class NotaDTO {
 
     public void setEstudianteId(Integer estudianteId) {
         this.estudianteId = estudianteId;
+    }
+
+    public Integer getMateriaId() {
+        return materiaId;
+    }
+
+    public void setMateriaId(Integer materiaId) {
+        this.materiaId = materiaId;
     }
 
     public LocalDate getFecha() {

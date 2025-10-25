@@ -27,6 +27,10 @@ public class Nota {
     @JsonBackReference(value = "relacionestudiantenota")
     private Estudiante estudiante;
 
+    @ManyToOne
+    @JoinColumn(name = "fk_materia", referencedColumnName = "id")
+    private Materia materia;
+
     @Column(name = "comentario", length = 1000)
     private String comentario; // <-- campo opcional para observaciones del docente
 
@@ -79,6 +83,14 @@ public class Nota {
 
     public void setEstudiante(Estudiante estudiante) {
         this.estudiante = estudiante; //
+    }
+
+    public Materia getMateria() {
+        return materia;
+    }
+
+    public void setMateria(Materia materia) {
+        this.materia = materia;
     }
 
     public String getComentario() {

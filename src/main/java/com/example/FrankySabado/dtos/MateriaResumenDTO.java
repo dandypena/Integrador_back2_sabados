@@ -3,12 +3,12 @@ package com.example.FrankySabado.dtos;
 import java.util.List;
 
 public class MateriaResumenDTO {
-    private Long id;
+    private Integer id;
     private String nombre;
     private double promedio;
     private List<NotaDTO> notas;
 
-    public MateriaResumenDTO(Long id, String nombre, double promedio, List<NotaDTO> notas) {
+    public MateriaResumenDTO(Integer id, String nombre, double promedio, List<NotaDTO> notas) {
         this.id = id;
         this.nombre = nombre;
         this.promedio = promedio;
@@ -16,11 +16,11 @@ public class MateriaResumenDTO {
     }
 
     // Getters y Setters
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -46,5 +46,10 @@ public class MateriaResumenDTO {
 
     public void setNotas(List<NotaDTO> notas) {
         this.notas = notas;
+    }
+
+    // Alias para compatibilidad con código existente
+    public List<NotaDTO> getUltimasNotas() {
+        return notas;
     }
 }

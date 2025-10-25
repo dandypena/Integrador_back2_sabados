@@ -79,6 +79,19 @@ public class Estudiante {
 
     public void setUsuario(Usuario usuario) {this.usuario = usuario;}
 
+    public ArrayList<Nota> getNotas() {
+        return notas;
+    }
 
+    public void setNotas(ArrayList<Nota> notas) {
+        this.notas = notas;
+    }
 
+    public ArrayList<Asistencia> getAsistencias() {
+        return asistencias;
+    }
+
+    public void setAsistencias(ArrayList<Asistencia> asistencias) {
+        this.asistencias = asistencias;
+    }
 }
