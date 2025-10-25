@@ -12,13 +12,12 @@ import com.example.FrankySabado.modelos.Nota;
 import com.example.FrankySabado.repositorios.EstudianteRepository;
 import com.example.FrankySabado.repositorios.FamiliarRepository;
 import com.example.FrankySabado.repositorios.NotaRepositorio;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -111,17 +110,16 @@ public class NotaServicio {
     }
 
     // 🟢 HU08 - Obtener notas de un estudiante
-    public List<NotaDTO> obtenerNotasPorEstudiante(Integer estudianteId) {
-        Estudiante estudiante = estudianteRepositorio.findById(estudianteId)
-                .orElseThrow(() -> new RuntimeException("Estudiante no encontrado"));
+	public List<NotaDTO> obtenerNotasPorEstudiante(Integer estudianteId) {
+		Estudiante estudiante = estudianteRepositorio.findById(estudianteId)
+				.orElseThrow(() -> new RuntimeException("Estudiante no encontrado"));
 
-        List<Nota> notas = notaRepositorio.findByEstudianteId(estudianteId);
+		List<Nota> notas = notaRepositorio.findByEstudianteId(estudianteId);
 
-        return notas.stream()
-                .map(this::convertirANotaDTO)
-                .collect(Collectors.toList());
-    }
-
+		return notas.stream()
+				.map(this::convertirANotaDTO)
+				.collect(Collectors.toList());
+	}
     // 🟢 HU08 - Actualizar una nota
     public NotaDTO actualizarNota(Integer id, NotaDTO notaDTO) {
         Nota nota = notaRepositorio.findById(id)
@@ -291,4 +289,14 @@ public class NotaServicio {
         dto.setEstudianteId(nota.getEstudiante().getId());
         return dto;
     }
+
+	public void guardarNota(Nota nota) {
+		if (nota.getValor() < 0.0 || nota.getValor() > 5.0) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El valor de la nota debe estar entre 0.0 y 5.0");
+		}
+
+		notaRepositorio.save(nota);
+	}
 }
+
+

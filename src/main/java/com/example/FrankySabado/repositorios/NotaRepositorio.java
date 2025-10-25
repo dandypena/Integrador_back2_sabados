@@ -1,20 +1,20 @@
 package com.example.FrankySabado.repositorios;
 
 import com.example.FrankySabado.modelos.Nota;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import com.example.FrankySabado.ayudas.TipoEvaluacion;
 
 import java.util.List;
-
+import java.util.Optional;
 @Repository
 public interface NotaRepositorio extends JpaRepository<Nota, Integer> {
 
-    // 🔹 HU08 - Listar notas por estudiante
-    List<Nota> findByEstudianteId(Integer estudianteId);
+	// 🔹 HU08 - Listar notas por estudiante
 
-    // 🔹 Para HU11 – Notas de bajo rendimiento
+	// 🔹 Para HU11 – Notas de bajo rendimiento
     @Query("""
         SELECT n.estudiante.usuario.nombre, n.tipo, AVG(n.valor)
         FROM Nota n
@@ -53,4 +53,7 @@ public interface NotaRepositorio extends JpaRepository<Nota, Integer> {
         ORDER BY n.fecha ASC
     """)
     List<Nota> findByEstudianteIdOrderByFechaAsc(Integer estudianteId);
+
+	List<Nota> findByEstudianteId(Integer estudianteId);
 }
+

@@ -1,11 +1,9 @@
 package com.example.FrankySabado.controlador;
 
 import com.example.FrankySabado.ayudas.Roles;
-import com.example.FrankySabado.dtos.EstudianteNotasDTO;
-import com.example.FrankySabado.dtos.EvolucionAcademicaDTO;
-import com.example.FrankySabado.dtos.NotaDTO;
-import com.example.FrankySabado.dtos.RegistrarNotasDTO;
-import com.example.FrankySabado.dtos.RendimientoBajoDTO;
+import com.example.FrankySabado.dtos.*;
+import com.example.FrankySabado.modelos.Nota;
+import com.example.FrankySabado.repositorios.NotaRepositorio;
 import com.example.FrankySabado.servicios.NotaServicio;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -64,7 +62,7 @@ public class NotaControlador {
             notaServicio.eliminarNota(id);
             return ResponseEntity.ok("Nota eliminada correctamente");
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nota no encontrada");
+			return ResponseEntity.noContent().build();
         }
     }
 
@@ -136,4 +134,5 @@ public class NotaControlador {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
 }
