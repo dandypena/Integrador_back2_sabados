@@ -4,7 +4,7 @@ import java.util.List;
 
 public class EvolucionAcademicaDTO {
     private String periodo;
-    private Integer año;
+    private Integer anio; // renombrado desde 'año' a 'anio' para evitar caracteres no-ASCII
     private Integer semestre;
     private Double promedioGeneral;
     private Integer cantidadNotas;
@@ -13,9 +13,9 @@ public class EvolucionAcademicaDTO {
     // Constructores
     public EvolucionAcademicaDTO() {}
 
-    public EvolucionAcademicaDTO(String periodo, Integer año, Integer semestre, Double promedioGeneral, Integer cantidadNotas, List<NotaDTO> notas) {
+    public EvolucionAcademicaDTO(String periodo, Integer anio, Integer semestre, Double promedioGeneral, Integer cantidadNotas, List<NotaDTO> notas) {
         this.periodo = periodo;
-        this.año = año;
+        this.anio = anio;
         this.semestre = semestre;
         this.promedioGeneral = promedioGeneral;
         this.cantidadNotas = cantidadNotas;
@@ -31,12 +31,12 @@ public class EvolucionAcademicaDTO {
         this.periodo = periodo;
     }
 
-    public Integer getAño() {
-        return año;
+    public Integer getAnio() {
+        return anio;
     }
 
-    public void setAño(Integer año) {
-        this.año = año;
+    public void setAnio(Integer anio) {
+        this.anio = anio;
     }
 
     public Integer getSemestre() {
@@ -71,4 +71,3 @@ public class EvolucionAcademicaDTO {
         this.notas = notas;
     }
 }
-

@@ -1,7 +1,6 @@
 package com.example.FrankySabado.repositorios;
 
 import com.example.FrankySabado.modelos.Nota;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -53,6 +52,18 @@ public interface NotaRepositorio extends JpaRepository<Nota, Integer> {
         ORDER BY n.fecha ASC
     """)
     List<Nota> findByEstudianteIdOrderByFechaAsc(Integer estudianteId);
+
+    // HU20 - Obtener notas asignadas por un docente (relacionando Materia con Grupo usando materiaId)
+    @Query("""
+        SELECT n
+        FROM Nota n
+        JOIN n.estudiante e
+        JOIN e.grupo g,
+             Materia m
+        WHERE m.id = g.materiaId
+          AND m.docente.id = :docenteId
+    """)
+    List<Nota> findByDocenteId(Integer docenteId);
 
 	List<Nota> findByEstudianteId(Integer estudianteId);
 }

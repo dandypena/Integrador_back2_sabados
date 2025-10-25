@@ -9,6 +9,9 @@ public class NotaDTO {
     private TipoEvaluacion tipo;
     private LocalDate fecha;
     private Integer estudianteId;
+    private Long materiaId; // <-- agregado para validar materia en HU07
+    private String comentario; // <-- agregado para HU13
+    private String estudianteNombre; // <-- agregado para HU20
 
     // Constructores
     public NotaDTO() {}
@@ -61,5 +64,28 @@ public class NotaDTO {
     public void setEstudianteId(Integer estudianteId) {
         this.estudianteId = estudianteId;
     }
-}
 
+    public Long getMateriaId() {
+        return materiaId;
+    }
+
+    public void setMateriaId(Long materiaId) {
+        this.materiaId = materiaId;
+    }
+
+    public String getComentario() {
+        return comentario;
+    }
+
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
+    }
+
+    public String getEstudianteNombre() {
+        return estudianteNombre;
+    }
+
+    public void setEstudianteNombre(String estudianteNombre) {
+        this.estudianteNombre = estudianteNombre;
+    }
+}

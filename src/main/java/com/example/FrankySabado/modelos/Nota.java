@@ -27,6 +27,9 @@ public class Nota {
     @JsonBackReference(value = "relacionestudiantenota")
     private Estudiante estudiante;
 
+    @Column(name = "comentario", length = 1000)
+    private String comentario; // <-- campo opcional para observaciones del docente
+
     // 🔹 Constructores
     public Nota() {}
 
@@ -77,5 +80,12 @@ public class Nota {
     public void setEstudiante(Estudiante estudiante) {
         this.estudiante = estudiante; //
     }
-}
 
+    public String getComentario() {
+        return comentario;
+    }
+
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
+    }
+}
