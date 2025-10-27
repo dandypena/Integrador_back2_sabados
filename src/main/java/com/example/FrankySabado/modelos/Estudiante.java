@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "estudiantes")
@@ -26,11 +27,11 @@ public class Estudiante {
 
     @OneToMany(mappedBy = "estudiante")
     @JsonManagedReference(value = "relacionestudianteasistencia")
-    private ArrayList<Asistencia> asistencias;
+    private List<Asistencia> asistencias;
 
     @OneToMany(mappedBy = "estudiante")
     @JsonManagedReference(value="relacionestudiantenota")
-    private ArrayList<Nota> notas;
+    private List<Nota> notas;
 
     @ManyToOne
     @JoinColumn(name = "fk_grupo", referencedColumnName = "id")
@@ -79,19 +80,19 @@ public class Estudiante {
 
     public void setUsuario(Usuario usuario) {this.usuario = usuario;}
 
-    public ArrayList<Nota> getNotas() {
+    public List<Nota> getNotas() {
         return notas;
     }
 
-    public void setNotas(ArrayList<Nota> notas) {
+    public void setNotas(List<Nota> notas) {
         this.notas = notas;
     }
 
-    public ArrayList<Asistencia> getAsistencias() {
+    public List<Asistencia> getAsistencias() {
         return asistencias;
     }
 
-    public void setAsistencias(ArrayList<Asistencia> asistencias) {
+    public void setAsistencias(List<Asistencia> asistencias) {
         this.asistencias = asistencias;
     }
 }

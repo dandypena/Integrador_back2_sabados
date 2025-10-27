@@ -28,7 +28,7 @@ public class Nota {
     private Estudiante estudiante;
 
     @ManyToOne
-    @JoinColumn(name = "fk_materia", referencedColumnName = "id")
+    @JoinColumn(name = "fk_materia", referencedColumnName = "id", nullable = true)
     private Materia materia;
 
     @Column(name = "comentario", length = 1000)

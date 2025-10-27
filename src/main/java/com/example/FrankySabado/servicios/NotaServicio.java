@@ -41,16 +41,20 @@ public class NotaServicio {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El valor de la nota debe estar entre 0.0 y 5.0");
         }
 
-        // Validar estudiante y materia
+        // Validar estudiante
         Estudiante estudiante = estudianteRepositorio.findById(notaDTO.getEstudianteId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Estudiante no encontrado"));
 
-        Materia materia = materiaRepository.findById(notaDTO.getMateriaId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Materia no encontrada"));
+        // Materia es OPCIONAL ahora
+        Materia materia = null;
+        if (notaDTO.getMateriaId() != null) {
+            materia = materiaRepository.findById(notaDTO.getMateriaId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Materia no encontrada"));
+        }
 
         Nota nota = notaMapper.dtoToEntity(notaDTO);
         nota.setEstudiante(estudiante);
-        nota.setMateria(materia);
+        nota.setMateria(materia);  // Puede ser null
         nota.setFecha(LocalDate.now());
 
         Nota notaGuardada = notaRepositorio.save(nota);

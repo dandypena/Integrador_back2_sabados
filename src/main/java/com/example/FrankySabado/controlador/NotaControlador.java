@@ -23,7 +23,7 @@ public class NotaControlador {
         this.notaServicio = notaServicio;
     }
 
-    // 🟢 HU08 - POST /notas - Registrar una nota individual
+    // 🟢 HU08 - POST /notas - Registrar una nota individual (CON validación de rol)
     @PostMapping
     public ResponseEntity<NotaDTO> registrarNota(
             @RequestHeader(value = "X-User-Role", required = true) String rolHeader,
@@ -43,6 +43,19 @@ public class NotaControlador {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
+    // 🆕 POST /notas/registrar - Registrar nota SIN validación de rol (PÚBLICO)
+    @PostMapping("/registrar")
+    public ResponseEntity<?> registrarNotaPublico(@RequestBody NotaDTO notaDTO) {
+        try {
+            NotaDTO notaCreada = notaServicio.registrarNota(notaDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(notaCreada);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al registrar la nota: " + e.getMessage());
         }
     }
 
