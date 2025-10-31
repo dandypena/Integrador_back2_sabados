@@ -6,8 +6,6 @@ import com.example.FrankySabado.ayudas.NivelAcademico;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
-import java.util.List;
-
 @Entity
 @Table(name = "docente")
 
@@ -35,22 +33,23 @@ public class Docente {
     @JsonManagedReference(value = "relaciondocenteousuario")
     private Usuario usuario;
 
-    // Relación con Materia (OneToMany)
-    @OneToMany(mappedBy = "docente", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Materia> materias;
+    // Materia que imparte el docente (OPCIONAL)
+    @ManyToOne
+    @JoinColumn(name = "fk_materia_principal", referencedColumnName = "id", nullable = true)
+    private Materia materiaPrincipal;
 
 
     public Docente() {
 
     }
 
-    public Docente(Integer id, Especialidad especialidad, NivelAcademico nivelAcademico, Departamentos departamento, Usuario usuario, List<Materia> materias) {
+    public Docente(Integer id, Especialidad especialidad, NivelAcademico nivelAcademico, Departamentos departamento, Usuario usuario, Materia materiaPrincipal) {
         this.id = id;
         this.especialidad = especialidad;
         this.nivelAcademico = nivelAcademico;
         this.departamento = departamento;
         this.usuario = usuario;
-        this.materias = materias;
+        this.materiaPrincipal = materiaPrincipal;
     }
 
     public Integer getId() {
@@ -93,11 +92,11 @@ public class Docente {
         this.departamento = departamento;
     }
 
-    public List<Materia> getMaterias() {
-        return materias;
+    public Materia getMateriaPrincipal() {
+        return materiaPrincipal;
     }
 
-    public void setMaterias(List<Materia> materias) {
-        this.materias = materias;
+    public void setMateriaPrincipal(Materia materiaPrincipal) {
+        this.materiaPrincipal = materiaPrincipal;
     }
 }

@@ -9,7 +9,8 @@ public class NotaDTO {
     private TipoEvaluacion tipo;
     private String comentario;
     private Integer estudianteId;
-    private Integer materiaId;
+    private Integer materiaId; // Opcional - ID de la materia si existe
+    private String nombreMateria; // Opcional - Nombre de materia como texto libre
     private LocalDate fecha;
 
     // Constructor por defecto
@@ -70,5 +71,13 @@ public class NotaDTO {
 
     public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
+    }
+
+    public String getNombreMateria() {
+        return nombreMateria;
+    }
+
+    public void setNombreMateria(String nombreMateria) {
+        this.nombreMateria = nombreMateria;
     }
 }

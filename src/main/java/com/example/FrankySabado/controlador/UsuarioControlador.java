@@ -2,6 +2,8 @@ package com.example.FrankySabado.controlador;
 
 import com.example.FrankySabado.dtos.CrearEstudianteDTO;
 import com.example.FrankySabado.dtos.CrearDocenteDTO;
+import com.example.FrankySabado.dtos.LoginResponseDTO;
+import com.example.FrankySabado.dtos.ErrorResponseDTO;
 import com.example.FrankySabado.modelos.Docente;
 import com.example.FrankySabado.modelos.Estudiante;
 import com.example.FrankySabado.modelos.Usuario;
@@ -26,9 +28,22 @@ public class UsuarioControlador {
     public ResponseEntity<?> crearEstudiante(@RequestBody CrearEstudianteDTO dto) {
         try {
             Estudiante estudiante = usuarioServicio.crearEstudiante(dto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(estudiante);
+            // Crear respuesta con formato esperado por el frontend
+            LoginResponseDTO response = new LoginResponseDTO();
+            response.setId(estudiante.getUsuario().getId());
+            response.setNombre(estudiante.getUsuario().getNombre());
+            response.setCorreo(estudiante.getUsuario().getCorreo());
+            response.setRol(estudiante.getUsuario().getRol());
+            response.setEstudianteId(estudiante.getId());
+            response.setSuccess(true);
+            response.setMessage("Estudiante registrado exitosamente");
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            ErrorResponseDTO error = new ErrorResponseDTO();
+            error.setSuccess(false);
+            error.setError("REGISTRATION_ERROR");
+            error.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         }
     }
 
@@ -37,12 +52,32 @@ public class UsuarioControlador {
     public ResponseEntity<?> crearDocente(@RequestBody CrearDocenteDTO dto) {
         try {
             Docente docente = usuarioServicio.crearDocente(dto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(docente);
+            // Crear respuesta con formato esperado por el frontend
+            LoginResponseDTO response = new LoginResponseDTO();
+            response.setId(docente.getUsuario().getId());
+            response.setNombre(docente.getUsuario().getNombre());
+            response.setCorreo(docente.getUsuario().getCorreo());
+            response.setRol(docente.getUsuario().getRol());
+            response.setDocenteId(docente.getId());
+            response.setSuccess(true);
+            response.setMessage("Docente registrado exitosamente");
+            if (docente.getMateriaPrincipal() != null) {
+                response.setMateriaId(docente.getMateriaPrincipal().getId());
+                response.setMateriaNombre(docente.getMateriaPrincipal().getNombre());
+            }
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            ErrorResponseDTO error = new ErrorResponseDTO();
+            error.setSuccess(false);
+            error.setError("REGISTRATION_ERROR");
+            error.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al crear docente: " + e.getMessage());
+            ErrorResponseDTO error = new ErrorResponseDTO();
+            error.setSuccess(false);
+            error.setError("INTERNAL_ERROR");
+            error.setMessage("Error al crear docente: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
     }
 

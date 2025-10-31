@@ -22,20 +22,22 @@ import jakarta.validation.constraints.Size;
         @Column(name = "codigo", nullable = false, unique = true)
         private String codigo;
 
-        // Relación con Docente (ManyToOne)
-        @ManyToOne(fetch = FetchType.LAZY, optional = false)
-        @JoinColumn(name = "docente_id", nullable = false)
-        private Docente docente;
+        @Column(name = "creditos")
+        private Integer creditos;
+
+        @Column(name = "descripcion", length = 500)
+        private String descripcion;
 
 
         public Materia() {
         }
 
-        public Materia(Integer id, String nombre, String codigo, Docente docente) {
+        public Materia(Integer id, String nombre, String codigo, Integer creditos, String descripcion) {
             this.id = id;
             this.nombre = nombre;
             this.codigo = codigo;
-            this.docente = docente;
+            this.creditos = creditos;
+            this.descripcion = descripcion;
         }
 
         // Getters y Setters
@@ -63,15 +65,21 @@ import jakarta.validation.constraints.Size;
             this.codigo = codigo;
         }
 
-        public Docente getDocente() {
-            return docente;
+        public Integer getCreditos() {
+            return creditos;
         }
 
-        public void setDocente(Docente docente) {
-            this.docente = docente;
+        public void setCreditos(Integer creditos) {
+            this.creditos = creditos;
         }
 
+        public String getDescripcion() {
+            return descripcion;
+        }
 
+        public void setDescripcion(String descripcion) {
+            this.descripcion = descripcion;
+        }
     }
 
 

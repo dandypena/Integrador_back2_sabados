@@ -31,6 +31,9 @@ public class Nota {
     @JoinColumn(name = "fk_materia", referencedColumnName = "id", nullable = true)
     private Materia materia;
 
+    @Column(name = "nombre_materia", length = 200)
+    private String nombreMateria; // Nombre de materia como texto libre (alternativa a materia)
+
     @Column(name = "comentario", length = 1000)
     private String comentario; // <-- campo opcional para observaciones del docente
 
@@ -99,5 +102,13 @@ public class Nota {
 
     public void setComentario(String comentario) {
         this.comentario = comentario;
+    }
+
+    public String getNombreMateria() {
+        return nombreMateria;
+    }
+
+    public void setNombreMateria(String nombreMateria) {
+        this.nombreMateria = nombreMateria;
     }
 }

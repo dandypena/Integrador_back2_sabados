@@ -11,18 +11,20 @@ public class CrearDocenteDTO {
     private Especialidad especialidad;
     private NivelAcademico nivelAcademico;
     private Departamentos departamento;
+    private Integer materiaId;
 
     public CrearDocenteDTO() {
     }
 
     public CrearDocenteDTO(String nombre, String correo, String contraseña, Especialidad especialidad,
-                          NivelAcademico nivelAcademico, Departamentos departamento) {
+                          NivelAcademico nivelAcademico, Departamentos departamento, Integer materiaId) {
         this.nombre = nombre;
         this.correo = correo;
         this.contraseña = contraseña;
         this.especialidad = especialidad;
         this.nivelAcademico = nivelAcademico;
         this.departamento = departamento;
+        this.materiaId = materiaId;
     }
 
     public String getNombre() {
@@ -71,6 +73,14 @@ public class CrearDocenteDTO {
 
     public void setDepartamento(Departamentos departamento) {
         this.departamento = departamento;
+    }
+
+    public Integer getMateriaId() {
+        return materiaId;
+    }
+
+    public void setMateriaId(Integer materiaId) {
+        this.materiaId = materiaId;
     }
 }
 

@@ -15,6 +15,15 @@ public class NotaMapper {
         dto.setEstudianteId(nota.getEstudiante().getId());
         dto.setTipo(nota.getTipo());
         dto.setFecha(nota.getFecha());
+        
+        // Mapear materia (opcional)
+        if (nota.getMateria() != null) {
+            dto.setMateriaId(nota.getMateria().getId());
+        }
+        
+        // Mapear nombre de materia (opcional)
+        dto.setNombreMateria(nota.getNombreMateria());
+        
         return dto;
     }
 
@@ -25,6 +34,7 @@ public class NotaMapper {
         nota.setComentario(dto.getComentario());
         nota.setTipo(dto.getTipo());
         nota.setFecha(dto.getFecha());
+        nota.setNombreMateria(dto.getNombreMateria()); // Mapear nombre de materia
         return nota;
     }
 }

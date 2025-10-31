@@ -11,31 +11,19 @@ public class Grupo {
     @Column(nullable = false)
     private String nombre;
 
-    @Column(nullable = false)
-    private int semestre;
+    @Column(columnDefinition = "TEXT")
+    private String descripcion;
 
-    @Column(name ="materia-id", nullable = false)
-    private long materiaId;
+    @Column(nullable = true)
+    private Integer semestre;
 
     public Grupo() {}
 
-    public Grupo(long id, String nombre, int semestre, long materiaId) {
+    public Grupo(long id, String nombre, String descripcion, Integer semestre) {
         this.id = id;
         this.nombre = nombre;
+        this.descripcion = descripcion;
         this.semestre = semestre;
-        this.materiaId = materiaId;
-    }
-
-    public long getMateriaId() {
-        return materiaId;
-    }
-
-    public int getSemestre() {
-        return semestre;
-    }
-
-    public java.lang.String getNombre() {
-        return nombre;
     }
 
     public long getId() {
@@ -46,15 +34,27 @@ public class Grupo {
         this.id = id;
     }
 
-    public void setNombre(java.lang.String nombre) {
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
-    public void setSemestre(int semestre) {
-        this.semestre = semestre;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setMateriaId(long materiaId) {
-        this.materiaId = materiaId;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public Integer getSemestre() {
+        return semestre;
+    }
+
+    public void setSemestre(Integer semestre) {
+        this.semestre = semestre;
     }
 }

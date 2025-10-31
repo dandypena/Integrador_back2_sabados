@@ -4,12 +4,15 @@ import com.example.FrankySabado.ayudas.Estados;
 import com.example.FrankySabado.ayudas.Roles;
 import com.example.FrankySabado.dtos.CrearEstudianteDTO;
 import com.example.FrankySabado.dtos.CrearDocenteDTO;
+import com.example.FrankySabado.dtos.LoginDTO;
 import com.example.FrankySabado.modelos.Docente;
 import com.example.FrankySabado.modelos.Estudiante;
 import com.example.FrankySabado.modelos.Grupo;
+import com.example.FrankySabado.modelos.Materia;
 import com.example.FrankySabado.modelos.Usuario;
 import com.example.FrankySabado.repositorios.DocenteRepository;
 import com.example.FrankySabado.repositorios.EstudianteRepository;
+import com.example.FrankySabado.repositorios.MateriaRepository;
 import com.example.FrankySabado.repositorios.UsuarioRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -22,14 +25,50 @@ public class UsuarioServicio {
     private final UsuarioRepository usuarioRepository;
     private final EstudianteRepository estudianteRepository;
     private final DocenteRepository docenteRepository;
+    private final MateriaRepository materiaRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public UsuarioServicio(UsuarioRepository usuarioRepository, EstudianteRepository estudianteRepository, DocenteRepository docenteRepository) {
+    public UsuarioServicio(UsuarioRepository usuarioRepository, EstudianteRepository estudianteRepository, DocenteRepository docenteRepository, MateriaRepository materiaRepository) {
         this.usuarioRepository = usuarioRepository;
         this.estudianteRepository = estudianteRepository;
         this.docenteRepository = docenteRepository;
+        this.materiaRepository = materiaRepository;
+    }
+
+    /**
+     * Autenticar usuario con correo y contraseña
+     * @param loginDTO Datos de login
+     * @return Usuario autenticado
+     * @throws RuntimeException si las credenciales son inválidas
+     */
+    public Usuario autenticar(LoginDTO loginDTO) {
+        // Buscar usuario por correo
+        Usuario usuario = usuarioRepository.findByCorreo(loginDTO.getCorreo())
+                .orElseThrow(() -> new RuntimeException("Credenciales inválidas"));
+        
+        // Verificar contraseña
+        if (!usuario.getContraseña().equals(loginDTO.getContraseña())) {
+            throw new RuntimeException("Credenciales inválidas");
+        }
+        
+        // Verificar que el usuario esté activo
+        if (usuario.getEstado() != Estados.Activo) {
+            throw new RuntimeException("Usuario inactivo. Contacte al administrador.");
+        }
+        
+        return usuario;
+    }
+
+    /**
+     * Buscar usuario por correo
+     * @param correo Correo del usuario
+     * @return Usuario encontrado
+     */
+    public Usuario buscarPorCorreo(String correo) {
+        return usuarioRepository.findByCorreo(correo)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
 
     @Transactional
@@ -99,6 +138,13 @@ public class UsuarioServicio {
         docente.setEspecialidad(dto.getEspecialidad());
         docente.setNivelAcademico(dto.getNivelAcademico());
         docente.setDepartamento(dto.getDepartamento());
+
+        // Asignar materia principal si se proporciona
+        if (dto.getMateriaId() != null) {
+            Materia materia = materiaRepository.findById(dto.getMateriaId())
+                    .orElseThrow(() -> new IllegalArgumentException("Materia no encontrada con ID: " + dto.getMateriaId()));
+            docente.setMateriaPrincipal(materia);
+        }
 
         return docenteRepository.save(docente);
     }

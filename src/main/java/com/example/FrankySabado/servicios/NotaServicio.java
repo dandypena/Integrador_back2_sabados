@@ -55,6 +55,7 @@ public class NotaServicio {
         Nota nota = notaMapper.dtoToEntity(notaDTO);
         nota.setEstudiante(estudiante);
         nota.setMateria(materia);  // Puede ser null
+        nota.setNombreMateria(notaDTO.getNombreMateria()); // Guardar nombre de materia como texto
         nota.setFecha(LocalDate.now());
 
         Nota notaGuardada = notaRepositorio.save(nota);
@@ -78,6 +79,18 @@ public class NotaServicio {
         notaExistente.setValor(notaDTO.getValor());
         if (notaDTO.getComentario() != null) {
             notaExistente.setComentario(notaDTO.getComentario());
+        }
+        
+        // Actualizar nombre de materia si se proporciona
+        if (notaDTO.getNombreMateria() != null) {
+            notaExistente.setNombreMateria(notaDTO.getNombreMateria());
+        }
+        
+        // Actualizar materia si se proporciona un ID
+        if (notaDTO.getMateriaId() != null) {
+            Materia materia = materiaRepository.findById(notaDTO.getMateriaId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Materia no encontrada"));
+            notaExistente.setMateria(materia);
         }
 
         Nota notaActualizada = notaRepositorio.save(notaExistente);

@@ -34,7 +34,7 @@ public class Estudiante {
     private List<Nota> notas;
 
     @ManyToOne
-    @JoinColumn(name = "fk_grupo", referencedColumnName = "id")
+    @JoinColumn(name = "fk_grupo", referencedColumnName = "id", nullable = true)
     private Grupo grupo;
 
 
