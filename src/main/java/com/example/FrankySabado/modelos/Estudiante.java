@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "estudiantes")
@@ -26,19 +27,25 @@ public class Estudiante {
 
     @OneToMany(mappedBy = "estudiante")
     @JsonManagedReference(value = "relacionestudianteasistencia")
-    private ArrayList<Asistencia> asistencias;
+    private List<Asistencia> asistencias;
 
     @OneToMany(mappedBy = "estudiante")
     @JsonManagedReference(value="relacionestudiantenota")
-    private ArrayList<Nota> notas;
+    private List<Nota> notas;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_grupo", referencedColumnName = "id", nullable = true)
+    private Grupo grupo;
+
 
     public Estudiante() {
     }
 
-    public Estudiante(Integer id, Double promedio, LocalDate fechaNacimiento) {
+    public Estudiante(Integer id, Double promedio, LocalDate fechaNacimiento, Grupo grupo) {
         this.id = id;
         this.promedio = promedio;
         this.fechaNacimiento = fechaNacimiento;
+        this.grupo = grupo;
     }
 
     public Integer getId() {
@@ -61,7 +68,31 @@ public class Estudiante {
         return fechaNacimiento;
     }
 
+    public Grupo getGrupo() {return grupo;}
+
+    public void setGrupo(Grupo grupo) {this.grupo = grupo;}
+
     public void setFechaNacimiento(LocalDate fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public Usuario getUsuario() {return usuario;}
+
+    public void setUsuario(Usuario usuario) {this.usuario = usuario;}
+
+    public List<Nota> getNotas() {
+        return notas;
+    }
+
+    public void setNotas(List<Nota> notas) {
+        this.notas = notas;
+    }
+
+    public List<Asistencia> getAsistencias() {
+        return asistencias;
+    }
+
+    public void setAsistencias(List<Asistencia> asistencias) {
+        this.asistencias = asistencias;
     }
 }

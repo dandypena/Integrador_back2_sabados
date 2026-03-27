@@ -4,5 +4,6 @@ public enum Roles {
     Docente,
     Estudiante,
     Empresario,
-    Administrador
+    Administrador,
+    Familiar
 }

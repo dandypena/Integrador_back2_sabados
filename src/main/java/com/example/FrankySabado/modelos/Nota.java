@@ -3,47 +3,57 @@ package com.example.FrankySabado.modelos;
 import com.example.FrankySabado.ayudas.TipoEvaluacion;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
 
 @Entity
-@Table(name="notas")
+@Table(name = "notas")
 public class Nota {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer Id;
+    private Integer id;
 
-    @Column(name="valor", nullable = false, unique = false)
+    @Column(name = "valor", nullable = false)
     private Double valor;
 
     @Enumerated(EnumType.STRING)
     private TipoEvaluacion tipo;
 
-    @Column(name = "fecha", nullable = true, unique = false)
+    @Column(name = "fecha")
     private LocalDate fecha;
 
     @ManyToOne
     @JoinColumn(name = "fk_estudiante", referencedColumnName = "id")
-    @JsonBackReference(value="relacionestudiantenota")
+    @JsonBackReference(value = "relacionestudiantenota")
     private Estudiante estudiante;
 
-    public Nota() {
-    }
+    @ManyToOne
+    @JoinColumn(name = "fk_materia", referencedColumnName = "id", nullable = true)
+    private Materia materia;
+
+    @Column(name = "nombre_materia", length = 200)
+    private String nombreMateria; // Nombre de materia como texto libre (alternativa a materia)
+
+    @Column(name = "comentario", length = 1000)
+    private String comentario; // <-- campo opcional para observaciones del docente
+
+    // 🔹 Constructores
+    public Nota() {}
 
     public Nota(Integer id, Double valor, TipoEvaluacion tipo, LocalDate fecha) {
-        Id = id;
+        this.id = id;
         this.valor = valor;
         this.tipo = tipo;
         this.fecha = fecha;
     }
 
+    // 🔹 Getters y Setters
     public Integer getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Integer id) {
-        Id = id;
+        this.id = id;
     }
 
     public Double getValor() {
@@ -68,5 +78,37 @@ public class Nota {
 
     public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
+    }
+
+    public Estudiante getEstudiante() {
+        return estudiante;
+    }
+
+    public void setEstudiante(Estudiante estudiante) {
+        this.estudiante = estudiante; //
+    }
+
+    public Materia getMateria() {
+        return materia;
+    }
+
+    public void setMateria(Materia materia) {
+        this.materia = materia;
+    }
+
+    public String getComentario() {
+        return comentario;
+    }
+
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
+    }
+
+    public String getNombreMateria() {
+        return nombreMateria;
+    }
+
+    public void setNombreMateria(String nombreMateria) {
+        this.nombreMateria = nombreMateria;
     }
 }

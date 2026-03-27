@@ -32,8 +32,16 @@ public class Usuario {
     private Estudiante estudiante;
 
     @OneToOne(mappedBy = "usuario")
+    @JsonBackReference(value="relaciondocenteousuario")
+    private Docente docente;
+
+    @OneToOne(mappedBy = "usuario")
     @JsonBackReference(value="relacionempresariousuario")
     private Empresario empresario;
+
+    @OneToOne(mappedBy = "usuario")
+    @JsonBackReference(value="relacionfamiliarusuario")
+    private Familiar familiar;
 
     public Usuario() {
 
